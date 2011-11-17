@@ -6,6 +6,9 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
   with ParentProjectDependencies
   with DefaultRepos
 {
+  val utilVersion = "2.9.1_1.12.3"
+  val ostrichVersion = "2.9.1_4.9.3"
+
   override def subversionRepository = Some("https://svn.twitter.biz/maven-public")
 
   val nettyRepo =
@@ -162,9 +165,9 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
     //   "util" ~ "util-hashing"
     // )
     
-    val utilCore = "com.twitter" % "util-core" % "2.9.1_1.12.3"
-    val utilCollection = "com.twitter" % "util-collection" % "2.9.1_1.12.3"
-    val utilHashing = "com.twitter" % "util-hashing" % "2.9.1_1.12.3"
+    val utilCore = "com.twitter" % "util-core" % utilVersion
+    val utilCollection = "com.twitter" % "util-collection" % utilVersion
+    val utilHashing = "com.twitter" % "util-hashing" % utilVersion
  
     // Testing:
     val mockito = "org.mockito"             % "mockito-all"      % "1.8.5" % "test" withSources()
@@ -195,7 +198,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
   //     "util" ~ "util-hashing"
   //   )
 
-    val utilHashing = "com.twitter" % "util-hashing" % "2.9.1_1.12.3"
+    val utilHashing = "com.twitter" % "util-hashing" % utilVersion
   }
 
   class KestrelProject(info: ProjectInfo) extends StandardProject(info)
@@ -214,8 +217,8 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
     //   "util" ~ "util-logging"
     // )
 
-    val utilCodec = "com.twitter" % "util-codec" % "2.9.1_1.12.3"
-    val utilLogging = "com.twitter" % "util-logging" % "2.9.1_1.12.3"
+    val utilCodec = "com.twitter" % "util-codec" % utilVersion
+    val utilLogging = "com.twitter" % "util-logging" % utilVersion
 
     val commonsLang = "commons-lang" % "commons-lang" % "2.6" // for FastDateFormat
   }
@@ -245,7 +248,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
     with Defaults with CompileThriftFinagle
   {
     val slf4jNop = "org.slf4j" %  "slf4j-nop" % "1.5.8" % "provided"
-    val utilCodec = "com.twitter" % "util-codec" % "2.9.1_1.12.3"
+    val utilCodec = "com.twitter" % "util-codec" % utilVersion
   }
 
   class OstrichProject(info: ProjectInfo) extends StandardProject(info)
@@ -258,7 +261,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
     with Defaults
   {
     // projectDependencies("ostrich")
-    val ostrich4 = "com.twitter" % "ostrich" % "2.9.1_4.9.3"
+    val ostrich4 = "com.twitter" % "ostrich" % ostrichVersion 
   }
 
   class NativeProject(info: ProjectInfo) extends StandardProject(info)
@@ -271,7 +274,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
     val thrift   = "thrift"      % "libthrift" % "0.5.0"
     val slf4jNop = "org.slf4j"   % "slf4j-nop" % "1.5.8" % "provided"
     // projectDependencies("ostrich")
-    val ostrich4 = "com.twitter" % "ostrich" % "2.9.1_4.9.3"
+    val ostrich4 = "com.twitter" % "ostrich" % ostrichVersion 
   }
 
   class B3Project(info: ProjectInfo) extends StandardProject(info)
