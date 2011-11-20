@@ -6,11 +6,17 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
   with ParentProjectDependencies
   with DefaultRepos
 {
-  val utilVersion = "2.9.1_1.12.3"
-  val ostrichVersion = "2.9.1_4.9.3"
+  val localMaven = Resolver.file("Local Maven repository", new java.io.File(Path.userHome+"/.m2/repository"))
+  val publishTo = localMaven 
+
+  val utilVersion = "1.12.3"
+  val ostrichVersion = "4.9.3"
+
+  val specsVersion = "1.6.9" 
+  val versionSuffix = "_" + buildScalaVersion
 
   override def subversionRepository = Some("https://svn.twitter.biz/maven-public")
-
+  
   val nettyRepo =
     "repository.jboss.org" at "http://repository.jboss.org/nexus/content/groups/public/"
 
@@ -34,7 +40,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
    * HTTP codecs [HTTP may move to its own project soon]
    */
   val coreProject = project(
-    "finagle-core", "finagle-core",
+    "finagle-core", "finagle-core" + versionSuffix,
     new CoreProject(_))
 
   /**
@@ -48,7 +54,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
    * finagle-ostrich4 implements a StatsReceiver for the Ostrich 4.x statistics library
    */
   val ostrich4Project = project(
-    "finagle-ostrich4", "finagle-ostrich4",
+    "finagle-ostrich4", "finagle-ostrich4" + versionSuffix,
     new Ostrich4Project(_), coreProject)
 
   /**
@@ -57,7 +63,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
    * generation in finagle-thrift.
    */
   val thriftProject = project(
-    "finagle-thrift", "finagle-thrift",
+    "finagle-thrift", "finagle-thrift" + versionSuffix,
     new ThriftProject(_), coreProject)
 
   /**
@@ -73,7 +79,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
    * friendly clients.
    */
   val memcachedProject = project(
-    "finagle-memcached", "finagle-memcached",
+    "finagle-memcached", "finagle-memcached" + versionSuffix,
     new MemcachedProject(_), coreProject)
 
   /**
@@ -81,14 +87,14 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
    * friendly clients.
    */
   val kestrelProject = project(
-    "finagle-kestrel", "finagle-kestrel",
+    "finagle-kestrel", "finagle-kestrel" + versionSuffix,
     new KestrelProject(_), coreProject, memcachedProject)
 
   /**
    * finagle-http contains an http codec.
    */
   val httpProject = project(
-    "finagle-http", "finagle-http",
+    "finagle-http", "finagle-http" + versionSuffix,
     new HttpProject(_), coreProject)
 
   /**
@@ -104,7 +110,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
    * Twitter's "firehose".
    */
   val streamProject = project(
-    "finagle-stream", "finagle-stream",
+    "finagle-stream", "finagle-stream" + versionSuffix,
     new StreamProject(_), coreProject, kestrelProject)
 
   /**
@@ -112,14 +118,14 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
    * twitter-common's Zookeeper-backed serverset implementation.
    */
   val serversetsProject = project(
-    "finagle-serversets", "finagle-serversets",
+    "finagle-serversets", "finagle-serversets" + versionSuffix,
     new ServersetsProject(_), coreProject)
 
   /**
    * Examples for finagle
    */
   val exampleProject = project(
-    "finagle-example", "finagle-example",
+    "finagle-example", "finagle-example" + versionSuffix,
     new ExampleProject(_),
     coreProject, httpProject, streamProject, thriftProject,
     memcachedProject, kestrelProject)
@@ -129,7 +135,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
    * development.
    */
   val stressProject = project(
-    "finagle-stress", "finagle-stress",
+    "finagle-stress", "finagle-stress" + versionSuffix,
     new StressProject(_), coreProject, ostrich4Project, thriftProject, httpProject)
 
   /**
@@ -165,13 +171,13 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
     //   "util" ~ "util-hashing"
     // )
     
-    val utilCore = "com.twitter" % "util-core" % utilVersion
-    val utilCollection = "com.twitter" % "util-collection" % utilVersion
-    val utilHashing = "com.twitter" % "util-hashing" % utilVersion
+    val utilCore = "com.twitter" %% "util-core" % utilVersion
+    val utilCollection = "com.twitter" %% "util-collection" % utilVersion
+    val utilHashing = "com.twitter" %% "util-hashing" % utilVersion
  
     // Testing:
     val mockito = "org.mockito"             % "mockito-all"      % "1.8.5" % "test" withSources()
-    val specs   = "org.scala-tools.testing" %% "specs"      % "1.6.9" % "test" withSources()
+    val specs   = "org.scala-tools.testing" %% "specs"      % specsVersion % "test" withSources()
   }
 
   class ThriftProject(info: ProjectInfo) extends StandardProject(info)
@@ -198,7 +204,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
   //     "util" ~ "util-hashing"
   //   )
 
-    val utilHashing = "com.twitter" % "util-hashing" % utilVersion
+    val utilHashing = "com.twitter" %% "util-hashing" % utilVersion
   }
 
   class KestrelProject(info: ProjectInfo) extends StandardProject(info)
@@ -217,8 +223,8 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
     //   "util" ~ "util-logging"
     // )
 
-    val utilCodec = "com.twitter" % "util-codec" % utilVersion
-    val utilLogging = "com.twitter" % "util-logging" % utilVersion
+    val utilCodec = "com.twitter" %% "util-codec" % utilVersion
+    val utilLogging = "com.twitter" %% "util-logging" % utilVersion
 
     val commonsLang = "commons-lang" % "commons-lang" % "2.6" // for FastDateFormat
   }
@@ -248,7 +254,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
     with Defaults with CompileThriftFinagle
   {
     val slf4jNop = "org.slf4j" %  "slf4j-nop" % "1.5.8" % "provided"
-    val utilCodec = "com.twitter" % "util-codec" % utilVersion
+    val utilCodec = "com.twitter" %% "util-codec" % utilVersion
   }
 
   class OstrichProject(info: ProjectInfo) extends StandardProject(info)
@@ -261,7 +267,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
     with Defaults
   {
     // projectDependencies("ostrich")
-    val ostrich4 = "com.twitter" % "ostrich" % ostrichVersion 
+    val ostrich4 = "com.twitter" %% "ostrich" % ostrichVersion 
   }
 
   class NativeProject(info: ProjectInfo) extends StandardProject(info)
@@ -274,7 +280,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
     val thrift   = "thrift"      % "libthrift" % "0.5.0"
     val slf4jNop = "org.slf4j"   % "slf4j-nop" % "1.5.8" % "provided"
     // projectDependencies("ostrich")
-    val ostrich4 = "com.twitter" % "ostrich" % ostrichVersion 
+    val ostrich4 = "com.twitter" %% "ostrich" % ostrichVersion 
   }
 
   class B3Project(info: ProjectInfo) extends StandardProject(info)
