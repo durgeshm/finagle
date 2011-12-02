@@ -6,12 +6,14 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
   with ParentProjectDependencies
   with DefaultRepos
 {
+  val githubRepo = "durgeshm repo" at "http://durgeshm.github.com/releases/"
+
   val localMaven = Resolver.file("Local Maven repository", new java.io.File(Path.userHome+"/.m2/repository"))
   val publishTo = localMaven 
 
   val utilVersion = "1.12.5"
-  val ostrichVersion = "4.9.3"
-  override def usesMavenStyleBasePatternInPublishLocalConfiguration = true
+  val ostrichVersion = "4.10.0"
+  //override def usesMavenStyleBasePatternInPublishLocalConfiguration = true
 
   val specsVersion = "1.6.9" 
   val versionSuffix = "_" + buildScalaVersion
@@ -175,7 +177,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
     val utilCore = "com.twitter" %% "util-core" % utilVersion
     val utilCollection = "com.twitter" %% "util-collection" % utilVersion
     val utilHashing = "com.twitter" %% "util-hashing" % utilVersion
- 
+
     // Testing:
     val mockito = "org.mockito"             % "mockito-all"      % "1.8.5" % "test" withSources()
     val specs   = "org.scala-tools.testing" %% "specs"      % specsVersion % "test" withSources()
